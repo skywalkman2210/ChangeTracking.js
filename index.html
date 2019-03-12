@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <title>Tracking Test</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            #form {
+                margin-top: 20px;
+            }
+            #TrackedForm {
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="form" class="container">
+            <h1>Change Tracked Form</h1>
+            <form id="TrackedForm">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="first">First Name</label>
+                        <div class="col-md-12">
+                            <input type="text" id="first" name="first" data-prop="user.first" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="last">Last Name</label>
+                        <div class="col-md-12">
+                            <input type="text" id="last" name="last" data-prop="user.last" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="display">Display Name</label>
+                        <div class="col-md-12">
+                            <input type="text" id="display" name="display" class="form-control" notracking >
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3"></div>
+                    <div class="col-md-4 mb-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="Option1">Role</label>
+                        <div class="col-md-12">
+                            <select id="role" name="role" data-prop="role" class="form-control">
+                                <option value="" selected>Select a Role...</option>
+                                <option value="admin">Admin</option>
+                                <option value="superadmin">Super Admin</option>
+                                <option value="livelarge">Rock Super Star</option>
+                                <option value="sledgehammer">Super Duper Admin (Yes they Exist)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="organization">Organization</label>
+                        <div class="col-md-12">
+                            <select id="organization" name="organization" notracking class="form-control">
+                                <option value="" selected>Select an Organization...</option>
+                                <option value="gdi">Global Defence Initiative</option>
+                                <option value="nod">Brotherhood of NOD</option>
+                                <option value="shield">S.H.I.E.L.D.</option>
+                                <option value="daredevil">Nelson & Murdock</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3"></div>
+                </div>
+                <button class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="ChangeTracking.min.js"></script>
+        <script>
+            var form = document.getElementById('TrackedForm');
+
+            // Vanilla JavaScript
+            useTracking({
+                target: form
+            });
+
+            // jQuery extender
+            $('#TrackedForm').useTracking();
+        </script>
+    </body>
+</html>
