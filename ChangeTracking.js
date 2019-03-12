@@ -65,6 +65,21 @@ function useTracking(options) {
         originalObject = object;
     }
 
+    var elArr = options.target.querySelectorAll("input:not([type='submit']):not([name='__RequestVerificationToken']):not([notracking]), select:not([notracking])");
+    foreach(elArr, function (i, element) {
+        // Check to see if the input/select has a 'data-prop' attribute, or a 'notracking' attribute
+        if (element.getAttribute('data-prop') === undefined || element.getAttribute('data-prop') === '') {
+            // If no data-prop or notracking, then throw an exception
+            if (element.getAttribute('id')) {
+                throw "Element with ID of '" + element.getAttribute('id') + "' has no data-prop. Either specify a data-prop or use the 'notracking' attribute.";
+            } else if (element.getAttribute('name')) {
+                throw "Element with NAME of '" + element.getAttribute('name') + "' has no data-prop. Either specify a data-prop or use the 'notracking' attribute.";
+            } else {
+                throw "Element has no data-prop. Either specify a data-prop or use the 'notracking' attribute.";
+            }
+        }
+    });
+
     // Set as new prototype object is neccesary for the tracking.
     objectToModify = trackObject(originalObject);
 
@@ -108,6 +123,8 @@ function useTracking(options) {
                 throw "Element with ID of '" + element.getAttribute('id') + "' has no data-prop. Either specify a data-prop or use the 'notracking' attribute.";
             } else if (element.getAttribute('name')) {
                 throw "Element with NAME of '" + element.getAttribute('name') + "' has no data-prop. Either specify a data-prop or use the 'notracking' attribute.";
+            } else {
+                throw "Element has no data-prop. Either specify a data-prop or use the 'notracking' attribute.";
             }
         } else {
             // If there is one, then build the object
@@ -124,18 +141,18 @@ function useTracking(options) {
         // Some simple variables
         var pieces = [];
 
-        if (typeof jQuery == 'function') {
+        if (typeof jQuery === 'function') {
             var $element = $(element);
             element = $element[0];
         }
 
         // If it is a form, then should collect everything
-        if (element.tagName.toLowerCase() == "form") {
+        if (element.tagName.toLowerCase() === "form") {
             var obj = {};
             var merged = {};
 
             // Get the elements and the count
-            var arr = element.querySelectorAll('input:not([notracking]), select:not([notracking])');
+            var arr = element.querySelectorAll("input:not([type='submit']):not([name='__RequestVerificationToken']):not([notracking]), select:not([notracking])");
             var count = arr.length;
 
             for (var i = 0; i < count; i++) {
@@ -143,37 +160,39 @@ function useTracking(options) {
                 var data = e.getAttribute('data-prop');
 
                 // Split pieces by '.', e.g. "user.first" => [user, first]
-                var pieces = data.split('.');
+                if (data !== undefined && data !== null) {
+                    pieces = data.split('.');
 
-                // The property is always the last piece
-                var prop = pieces[pieces.length - 1];
-                var objStr = "{ ";
-                
-                // if there is more than one piece, then it is an object. { "user": {
-                if (pieces.length > 1) {
-                    for (var index = 0; index < (pieces.length -1); index++) {
-                        objStr += '"' + pieces[index] + '": { ';
-                    }
-                }
-    
-                // Build the property. { "user": { "first": ""
-                objStr += '"' + prop + '": "' + e.value + '"';
-    
-                // if there is more than one piece, then we need to close all objects.  { "user": { "first": "" }
-                if (pieces.length > 1) {
-                    for (var index = 0; index < (pieces.length -1); index++) {
-                        objStr += ' } ';
-                    }
-                }
-                
-                // Add the last brace, to complete the object.   { "user": { "first": "" } }
-                objStr += "}";
-                
-                // Parse the JSON into an object
-                obj = JSON.parse(objStr);
+                    // The property is always the last piece
+                    var prop = pieces[pieces.length - 1];
+                    var objStr = "{ ";
 
-                // Deep Merge the objects
-                merged = extend(true, merged, obj);
+                    // if there is more than one piece, then it is an object. { "user": {
+                    if (pieces.length > 1) {
+                        for (var k = 0; k < (pieces.i - 1); k++) {
+                            objStr += '"' + pieces[i] + '": { ';
+                        }
+                    }
+
+                    // Build the property. { "user": { "first": ""
+                    objStr += '"' + prop + '": "' + e.value + '"';
+
+                    // if there is more than one piece, then we need to close all objects.  { "user": { "first": "" }
+                    if (pieces.length > 1) {
+                        for (var j = 0; j < (pieces.length - 1); j++) {
+                            objStr += ' } ';
+                        }
+                    }
+
+                    // Add the last brace, to complete the object.   { "user": { "first": "" } }
+                    objStr += "}";
+
+                    // Parse the JSON into an object
+                    obj = JSON.parse(objStr);
+
+                    // Deep Merge the objects
+                    merged = extend(true, merged, obj);
+                }
             }
 
             return merged;
